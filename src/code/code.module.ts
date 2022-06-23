@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 // import { AppController } from 'src/app.controller';
-import { Snippet, SnippetModel } from './code.schema'
+import { SnippetModel } from './code.schema'
 import { CodeService } from './code.service'
 
 @Module({
@@ -10,6 +10,7 @@ import { CodeService } from './code.service'
     ],
     controllers: [],
     providers: [CodeService],
+    exports: [CodeService],
     // exports:[SnippetModel]
 })
 export class CodeModule {}
