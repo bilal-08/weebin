@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { CodeDto } from './code.dto'
 import { SnippetDocument } from './code.schema'
-
+import { nanoid } from 'nanoid'
 @Injectable()
 export class CodeService {
     constructor(
@@ -14,21 +14,23 @@ export class CodeService {
     async saveCode(data: CodeDto) {
         const { id, code, viewOnce } = data
         const result = {
-            id: id || 'some-random-id',
+            id: id || nanoid(6),
             code,
             viewOnce: viewOnce || false,
         }
 
-        const save = await new this.snippetModel(result).save()
-        console.log(save)
+        const save = await new this.snippetModel(result).save().catch((err) => {
+            return { status: 500, message: 'ID already Exists' + err.message }
+        })
         return save
     }
     async getCode(id: string) {
         const data = await this.snippetModel.findOne({ id })
-        if (!data) return { status: 404 }
-        else {
-            await this.snippetModel.updateOne({ id }, { count: data.count++ })
-            return data.code
-        }
+        console.log(data)
+        if (!data) return { status: 404, message: 'Code not found' }
+        if (data.viewOnce && data.count >= 1)
+            await this.snippetModel.deleteOne({ id })
+        else await this.snippetModel.updateOne({ id }, { $inc: { count: 1 } })
+        return data.code
     }
 }

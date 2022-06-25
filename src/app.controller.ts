@@ -12,7 +12,6 @@ import { CodeDto } from './code/code.dto'
 import { CodeService } from './code/code.service'
 @Controller()
 export class AppController {
-    // defined the codeservice
     constructor(
         private readonly appService: AppService,
         private readonly codeService: CodeService,
@@ -25,11 +24,12 @@ export class AppController {
 
     @Post('save')
     async savecode(@Body() code: CodeDto) {
-        const h = await this.codeService.saveCode(code)
-
-        console.log(h)
+        const data = await this.codeService.saveCode(code)
+        return data
     }
+
     @Get('/:id')
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    async getCode(@Param('id') id: string) {}
+    async getCode(@Param('id') id: string) {
+        return await this.codeService.getCode(id)
+    }
 }
