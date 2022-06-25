@@ -7,9 +7,9 @@ import {
     Body,
     Headers,
 } from '@nestjs/common'
-import { AppService } from './app.service'
-import { CodeDto } from './code/code.dto'
-import { CodeService } from './code/code.service'
+import { AppService } from './app.service.js'
+import { CodeDto } from './code/code.dto.js'
+import { CodeService } from './code/code.service.js'
 @Controller()
 export class AppController {
     constructor(

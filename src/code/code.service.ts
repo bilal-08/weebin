@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
-import { CodeDto } from './code.dto'
-import { SnippetDocument } from './code.schema'
+import mongoose from 'mongoose'
+import { CodeDto } from './code.dto.js'
+import { SnippetDocument } from './code.schema.js'
 import { nanoid } from 'nanoid'
 @Injectable()
 export class CodeService {
     constructor(
         @InjectModel('Snippet')
-        private readonly snippetModel: Model<SnippetDocument>,
+        private readonly snippetModel: mongoose.Model<SnippetDocument>,
     ) {}
 
     async saveCode(data: CodeDto) {
@@ -26,7 +26,6 @@ export class CodeService {
     }
     async getCode(id: string) {
         const data = await this.snippetModel.findOne({ id })
-        console.log(data)
         if (!data) return { status: 404, message: 'Code not found' }
         if (data.viewOnce && data.count >= 1)
             await this.snippetModel.deleteOne({ id })
